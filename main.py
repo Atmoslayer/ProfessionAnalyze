@@ -74,10 +74,10 @@ def fetch_hh_salary(pages_number, language):
             if predicted_salary:
                 salary += predicted_salary
                 vacancies_processed += 1
-        try:
-            average_salary = int(salary / vacancies_processed)
-        except ZeroDivisionError:
-            pass
+    try:
+        average_salary = int(salary / vacancies_processed)
+    except ZeroDivisionError:
+        pass
 
     bar.finish()
     return vacancies_found, vacancies_processed, average_salary
