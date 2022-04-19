@@ -129,10 +129,10 @@ if __name__ == '__main__':
         hh_vacancies_found, hh_vacancies_processed, hh_average_salary = fetch_hh_salary(pages_number, language)
         sj_vacancies_found, sj_vacancies_processed, sj_average_salary = fetch_sj_salary(pages_number, language)
 
-        hh_salaries[f'{language}'] = {'vacancies_found': hh_vacancies_found,
+        hh_salaries[language] = {'vacancies_found': hh_vacancies_found,
                                                     'vacancies_processed': hh_vacancies_processed,
                                                     'average_salary': hh_average_salary}
-        sj_salaries[f'{language}'] = {'vacancies_found': sj_vacancies_found,
+        sj_salaries[language] = {'vacancies_found': sj_vacancies_found,
                                                     'vacancies_processed': sj_vacancies_processed,
                                                     'average_salary': sj_average_salary}
 
