@@ -45,7 +45,7 @@ def predict_rub_salary_sj(vacanci):
     salary_to = vacanci['payment_to']
     if vacanci['currency'] == 'rub':
         salary = predict_salary(salary_from, salary_to)
-        if salary == 0:
+        if not salary:
             salary = None
     return salary
 
