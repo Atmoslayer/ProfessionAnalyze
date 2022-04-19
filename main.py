@@ -1,10 +1,10 @@
-import requests
 import os.path
 import time
 
+import requests
+from dotenv import load_dotenv
 from progress.bar import IncrementalBar
 from terminaltables import AsciiTable
-from dotenv import load_dotenv
 
 
 def print_statistics(statistics, languages):
