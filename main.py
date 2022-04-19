@@ -18,29 +18,26 @@ def print_statistics(statistics, languages):
 
 
 def predict_salary(salary_from, salary_to):
+    salary = 0
     if salary_from and salary_to:
         salary = (salary_from + salary_to) / 2
-    if not salary_from:
-        salary = salary_to * 0.8
-    if not salary_to:
+    elif salary_from:
         salary = salary_from * 1.2
-    if not salary_from and salary_to:
-        salary = 0
+    elif salary_to:
+        salary = salary_to * 0.8
+
     return int(salary)
 
 
 def predict_rub_salary_hh(vacanci):
     salary_info = vacanci['salary']
-
+    currency = ['RUR', 'RUB']
     if salary_info:
-        if salary_info['currency'] == 'RUR' or salary_info['currency'] == 'RUB':
+        if salary_info['currency'] in currency:
             salary_from = salary_info['from']
             salary_to = salary_info['to']
             salary = predict_salary(salary_from, salary_to)
             return salary
-
-        else:
-            return None
 
 
 def predict_rub_salary_sj(vacanci):
@@ -53,7 +50,7 @@ def predict_rub_salary_sj(vacanci):
     return salary
 
 
-def fetch_hh_salary(pages_number, language, hh_founded_vacancies_info):
+def fetch_hh_salary(pages_number, language):
     url = 'https://api.hh.ru/vacancies'
     page = 0
     salary = 0
@@ -86,7 +83,7 @@ def fetch_hh_salary(pages_number, language, hh_founded_vacancies_info):
     return vacancies_found, vacancies_processed, average_salary
 
 
-def fetch_sj_salary(pages_number, language, sj_founded_vacancies_info):
+def fetch_sj_salary(pages_number, language):
     url = 'https://api.superjob.ru/2.0/vacancies/'
     page = 0
     salary = 0
@@ -116,27 +113,22 @@ def fetch_sj_salary(pages_number, language, sj_founded_vacancies_info):
             except ZeroDivisionError:
                 pass
 
-        sj_founded_vacancies_info[f'{language}'] = {'vacancies_found': vacancies_found,
-                                                     'vacancies_processed': vacancies_processed,
-                                                     'average_salary': average_salary}
-
     bar.finish()
     return vacancies_found, vacancies_processed, average_salary
 
 
 if __name__ == '__main__':
     hh_salaries = {}
-    sj_salaries= {}
+    sj_salaries = {}
     load_dotenv()
     super_job_token = os.getenv('SUPER_JOB_TOKEN')
-    pages_number = 100
+    pages_number = 3
     languages = ['Go', 'C#', 'C++', 'PHP', 'Ruby', 'Python', 'Java', 'JavaScript']
 
     for language in languages:
-        vacancies_info = {}
-        hh_vacancies_found, hh_vacancies_processed, hh_average_salary = fetch_hh_salary(pages_number, language, vacancies_info)
-        sj_vacancies_found, sj_vacancies_processed, sj_average_salary = fetch_sj_salary(pages_number, language, vacancies_info)
-        
+        hh_vacancies_found, hh_vacancies_processed, hh_average_salary = fetch_hh_salary(pages_number, language)
+        sj_vacancies_found, sj_vacancies_processed, sj_average_salary = fetch_sj_salary(pages_number, language)
+
         hh_salaries[f'{language}'] = {'vacancies_found': hh_vacancies_found,
                                                     'vacancies_processed': hh_vacancies_processed,
                                                     'average_salary': hh_average_salary}
@@ -146,4 +138,3 @@ if __name__ == '__main__':
 
     print_statistics(hh_salaries, languages)
     print_statistics(sj_salaries, languages)
-
