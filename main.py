@@ -23,15 +23,15 @@ def print_statistics(statistics, languages):
 
 
 def predict_salary(salary_from, salary_to):
-    salary = 0
+    salary = None
     if salary_from and salary_to:
-        salary = (salary_from + salary_to) / 2
+        salary = int((salary_from + salary_to) / 2)
     elif salary_from:
-        salary = salary_from * 1.2
+        salary = int(salary_from * 1.2)
     elif salary_to:
-        salary = salary_to * 0.8
+        salary = int(salary_to * 0.8)
 
-    return int(salary)
+    return salary
 
 
 def predict_rub_salary_hh(vacanci):
@@ -50,8 +50,6 @@ def predict_rub_salary_sj(vacanci):
     salary_to = vacanci['payment_to']
     if vacanci['currency'] == 'rub':
         salary = predict_salary(salary_from, salary_to)
-        if not salary:
-            salary = None
     return salary
 
 
@@ -126,7 +124,7 @@ if __name__ == '__main__':
     sj_salaries = {}
     load_dotenv()
     super_job_token = os.getenv('SUPER_JOB_TOKEN')
-    pages_number = 3
+    pages_number = 100
     languages = ['Go',
                  'C#',
                  'C++',
