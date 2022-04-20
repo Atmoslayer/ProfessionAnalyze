@@ -1,5 +1,4 @@
 import os.path
-import time
 
 import requests
 from dotenv import load_dotenv
@@ -9,10 +8,16 @@ from terminaltables import AsciiTable
 
 def print_statistics(statistics, languages):
 
-    table_data = [['Язык программирования', 'Вакансий найдено', 'Вакансий обработано', 'Средняя зарплата']]
+    table_data = [['Язык программирования',
+                   'Вакансий найдено',
+                   'Вакансий обработано',
+                   'Средняя зарплата']]
     for language in languages:
-        table_data.append([language, statistics[language]['vacancies_found'], statistics[language]['vacancies_processed'], statistics[language]['average_salary']])
-        
+        table_data.append([language,
+                           statistics[language]['vacancies_found'],
+                           statistics[language]['vacancies_processed'],
+                           statistics[language]['average_salary']])
+
     table = AsciiTable(table_data)
     print(table.table)
 
@@ -89,8 +94,7 @@ def fetch_sj_salary(pages_number, language):
     salary = 0
     vacancies_processed = 0
     vacancies_found = 0
-    params = {'keyword': f'Программист, Разработка, {language}',
-                    'town': 4}
+    params = {'keyword': f'Программист, Разработка, {language}', 'town': 4}
     headers = {'X-Api-App-Id': super_job_token}
     bar = IncrementalBar(f'{language} super job progress', max=pages_number)
 
@@ -123,18 +127,25 @@ if __name__ == '__main__':
     load_dotenv()
     super_job_token = os.getenv('SUPER_JOB_TOKEN')
     pages_number = 3
-    languages = ['Go', 'C#', 'C++', 'PHP', 'Ruby', 'Python', 'Java', 'JavaScript']
+    languages = ['Go',
+                 'C#',
+                 'C++',
+                 'PHP',
+                 'Ruby',
+                 'Python',
+                 'Java',
+                 'JavaScript']
 
     for language in languages:
-        hh_vacancies_found, hh_vacancies_processed, hh_average_salary = fetch_hh_salary(pages_number, language)
-        sj_vacancies_found, sj_vacancies_processed, sj_average_salary = fetch_sj_salary(pages_number, language)
+        hh_found, hh_processed, hh_salary = fetch_hh_salary(pages_number, language)
+        sj_found, sj_processed, sj_salary = fetch_sj_salary(pages_number, language)
 
-        hh_salaries[language] = {'vacancies_found': hh_vacancies_found,
-                                 'vacancies_processed': hh_vacancies_processed,
-                                 'average_salary': hh_average_salary}
-        sj_salaries[language] = {'vacancies_found': sj_vacancies_found,
-                                 'vacancies_processed': sj_vacancies_processed,
-                                 'average_salary': sj_average_salary}
+        hh_salaries[language] = {'vacancies_found': hh_found,
+                                 'vacancies_processed': hh_processed,
+                                 'average_salary': hh_salary}
+        sj_salaries[language] = {'vacancies_found': sj_found,
+                                 'vacancies_processed': sj_processed,
+                                 'average_salary': sj_salary}
 
     print_statistics(hh_salaries, languages)
     print_statistics(sj_salaries, languages)
